@@ -1,0 +1,29 @@
+import { useKeyNote } from '../hooks/key'
+import { useShortcuts } from '../hooks/shortcuts'
+import type { Notes } from '../lib/notes'
+
+interface WhiteKeyProps {
+  note: keyof typeof Notes
+  octave: number
+}
+
+export default function WhiteKey({ note, octave }: WhiteKeyProps) {
+  const playKeyNote = useKeyNote(note, octave)
+  const { active, key } = useShortcuts(
+    note,
+    octave,
+    playKeyNote.play,
+    playKeyNote.stop
+  )
+
+  return (
+    <button
+      className='w-8 h-40 rounded-b flex flex-col justify-end items-center text-xs font-bold bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-300 hover:text-gray-400 active:text-gray-500 [[data-active=true]]:bg-gray-300 [[data-active=true]]:text-gray-500 [[data-active=true]]:hover:bg-gray-300 [[data-active=true]]:hover:text-gray-500'
+      onMouseDown={playKeyNote.play}
+      onMouseUp={playKeyNote.stop}
+      data-active={active}>
+      <span className='block'>{key?.toUpperCase()}</span>
+      <span className='block'>{note}</span>
+    </button>
+  )
+}
