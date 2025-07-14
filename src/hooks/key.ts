@@ -47,22 +47,54 @@ export function useKeyNote(
     oscillator.current.connect(gainNode.current)
     gainNode.current.connect(audioContext.current.destination)
 
+    const now = audioContext.current.currentTime
+    const attackTime = 0.02
+
+    gainNode.current.gain.setValueAtTime(0, now)
+    gainNode.current.gain.linearRampToValueAtTime(
+      settings.volume,
+      now + attackTime
+    )
+
     gainNode.current.gain.value = settings.volume
     gainNode.current.gain.exponentialRampToValueAtTime(
       0.0001,
-      audioContext.current.currentTime + settings.fadeOutDuration
+      audioContext.current.currentTime + attackTime + settings.fadeOutDuration
     )
 
     fadeTimeout.current = window.setTimeout(() => {
       fadeTimeout.current = null
-      stop()
-    }, settings.fadeOutDuration * 1000)
+      stop(true)
+    }, (settings.fadeOutDuration + attackTime) * 1000)
 
     oscillator.current.start()
   }
 
-  const stop = () => {
-    if (settings.pianoPedal) return
+  const stop = (deleteHowever: boolean = false) => {
+    if (settings.pianoPedal && !deleteHowever) return
+
+    if (fadeTimeout.current) {
+      window.clearTimeout(fadeTimeout.current)
+      fadeTimeout.current = null
+      if (audioContext.current != null && gainNode.current != null) {
+        const releaseTime = 0.05
+        const now = audioContext.current.currentTime
+        gainNode.current.gain.exponentialRampToValueAtTime(
+          0.0001,
+          now + releaseTime
+        )
+
+        setTimeout(clear, releaseTime * 1000)
+      } else {
+        clear()
+      }
+    } else {
+      clear()
+      console.log('no timeout')
+    }
+  }
+
+  const clear = () => {
     if (oscillator.current) {
       oscillator.current.stop()
       oscillator.current.disconnect()
@@ -71,10 +103,6 @@ export function useKeyNote(
     if (gainNode.current) {
       gainNode.current.disconnect()
       gainNode.current = null
-    }
-    if (fadeTimeout.current) {
-      window.clearTimeout(fadeTimeout.current)
-      fadeTimeout.current = null
     }
   }
 

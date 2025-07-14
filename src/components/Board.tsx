@@ -23,7 +23,9 @@ export default function Board() {
       }}>
       <main className='p-4 flex gap-2 flex-col rounded bg-gray-900'>
         <Settings />
-        <div className='flex'>
+        <div
+          className='flex select-none'
+          onContextMenu={(e) => e.preventDefault()}>
           <Octave octave={2} />
           <Octave octave={3} />
           <Octave octave={4} />
