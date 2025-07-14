@@ -26,12 +26,16 @@ export default function WhiteKey({ note, octave }: WhiteKeyProps) {
 
   return (
     <button
-      className='w-8 h-40 rounded-b flex flex-col justify-end items-center text-xs font-bold bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-300 hover:text-gray-400 active:text-gray-500 [[data-active=true]]:bg-gray-300 [[data-active=true]]:text-gray-500 [[data-active=true]]:hover:bg-gray-300 [[data-active=true]]:hover:text-gray-500'
+      className='relative w-8 h-40 rounded-b flex flex-col justify-end items-center text-xs font-bold bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-300 hover:text-gray-400 active:text-gray-500 [[data-active=true]]:bg-gray-300 [[data-active=true]]:text-gray-500 [[data-active=true]]:hover:bg-gray-300 [[data-active=true]]:hover:text-gray-500'
       onPointerDown={handleDown}
       onPointerUp={handleUp}
       onPointerLeave={handleUp}
       data-active={active}>
-      <span className='block'>{key?.toUpperCase()}</span>
+      <span
+        className='block origin-right text-end rotate-90 absolute bottom-6 right-4'
+        hidden={/Mobi|Android|iPhone/i.test(navigator.userAgent)}>
+        {key?.toUpperCase()}
+      </span>
       <span className='block'>{note}</span>
     </button>
   )

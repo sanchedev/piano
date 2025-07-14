@@ -26,12 +26,16 @@ export default function BlackKey({ note, octave }: BlackKeyProps) {
 
   return (
     <button
-      className='w-6 h-24 -mx-3 rounded-b flex flex-col justify-end items-center text-center text-[.5rem] bg-gray-800 hover:bg-gray-900 active:bg-black text-gray-600 hover:text-gray-700 active:text-gray-600 [[data-active=true]]:bg-black [[data-active=true]]:text-gray-600 [[data-active=true]]:hover:bg-black [[data-active=true]]:hover:text-gray-600 z-10'
+      className='relative w-6 h-24 -mx-3 rounded-b flex flex-col justify-end items-center text-center text-[.5rem] bg-gray-800 hover:bg-gray-900 active:bg-black text-gray-600 hover:text-gray-700 active:text-gray-600 [[data-active=true]]:bg-black [[data-active=true]]:text-gray-600 [[data-active=true]]:hover:bg-black [[data-active=true]]:hover:text-gray-600 z-10'
       onPointerDown={handleDown}
       onPointerUp={handleUp}
       onPointerLeave={handleUp}
       data-active={active}>
-      <span className='block'>{key?.toUpperCase()}</span>
+      <span
+        className='block origin-right text-end rotate-90 absolute bottom-4 right-3 text-xs font-bold'
+        hidden={/Mobi|Android|iPhone/i.test(navigator.userAgent)}>
+        {key?.toUpperCase()}
+      </span>
       <span className='block'>{note}</span>
     </button>
   )

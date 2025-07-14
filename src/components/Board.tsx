@@ -4,7 +4,8 @@ import Octave from './Octave'
 import Settings from './Settings'
 
 export default function Board() {
-  const [oscillatorType, setOscillatorType] = useState<OscillatorType>('square')
+  const [oscillatorType, setOscillatorType] =
+    useState<OscillatorType>('sawtooth')
   const [volume, setVolume] = useState<number>(0.5)
   const [fadeOutDuration, setFadeOutDuration] = useState<number>(4)
   const [pianoPedal, setPianoPedal] = useState<boolean>(false)
