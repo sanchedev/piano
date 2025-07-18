@@ -1,6 +1,8 @@
+import { use } from 'react'
 import { useKeyNote } from '../hooks/key'
 import { useShortcuts } from '../hooks/shortcuts'
 import type { SharpNotes } from '../lib/notes'
+import { SettingsContext } from '../contexts/settings'
 
 interface BlackKeyProps {
   note: keyof typeof SharpNotes
@@ -9,9 +11,10 @@ interface BlackKeyProps {
 
 export default function BlackKey({ note, octave }: BlackKeyProps) {
   const playKeyNote = useKeyNote(note, octave)
+  const { firstOctave } = use(SettingsContext)
   const { active, key } = useShortcuts(
     note,
-    octave,
+    octave - firstOctave,
     playKeyNote.play,
     playKeyNote.stop
   )

@@ -7,7 +7,11 @@ export interface OctaveProps {
 export default function Octave({ octave }: OctaveProps) {
   return (
     <article className='flex flex-row'>
-      <WhiteKey note='DO' octave={octave} />
+      <WhiteKey
+        note='DO'
+        octave={octave}
+        className={octave === 4 ? 'border-2 border-black/20' : ''}
+      />
       <BlackKey note='DO#' octave={octave} />
       <WhiteKey note='RE' octave={octave} />
       <BlackKey note='RE#' octave={octave} />
