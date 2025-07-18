@@ -12,6 +12,8 @@ export function useKeyNote(
   const gainNode = useRef<GainNode | null>(null)
   const fadeTimeout = useRef<number | null>(null)
 
+  const releaseTimeout = useRef<number | null>(null)
+
   useEffect(() => {
     return () => {
       sourceNode.current?.stop()
@@ -28,6 +30,11 @@ export function useKeyNote(
 
   // Ahora, la función `play` es asíncrona
   const play = () => {
+    if (releaseTimeout.current) {
+      window.clearTimeout(releaseTimeout.current)
+      releaseTimeout.current = null
+    }
+
     if (!audioContext) {
       console.error('AudioContext no está inicializado.')
       return
@@ -69,7 +76,7 @@ export function useKeyNote(
     }
 
     if (audioContext?.audioContext && gainNode.current) {
-      const releaseTime = 0.05
+      const releaseTime = 0.25
       const now = audioContext.audioContext.currentTime
 
       if (gainNode.current.gain.value < 0.001) {
@@ -78,12 +85,9 @@ export function useKeyNote(
       }
 
       gainNode.current.gain.cancelScheduledValues(now)
-      gainNode.current.gain.exponentialRampToValueAtTime(
-        0.0001,
-        now + releaseTime
-      )
+      gainNode.current.gain.linearRampToValueAtTime(0.001, now + releaseTime)
 
-      setTimeout(clear, releaseTime * 1000)
+      releaseTimeout.current = setTimeout(clear, releaseTime * 1000)
     } else {
       clear()
     }
