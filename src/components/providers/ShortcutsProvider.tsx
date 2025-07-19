@@ -33,7 +33,17 @@ const shortcutsObj = z.record(
     'SOL#',
     'LA#',
   ]),
-  z.record(z.number(), z.string().nullable())
+  z.record(
+    z.custom<string>((data) => {
+      if (typeof data !== 'string') return false
+      try {
+        return !window.isNaN(Number(data))
+      } catch {
+        return false
+      }
+    }),
+    z.string().nullable()
+  )
 )
 
 export function ShortcutsProvider({
@@ -44,8 +54,17 @@ export function ShortcutsProvider({
   const [shortcuts, setShortcuts] = useState<Shortcuts | null>(null)
 
   useEffect(() => {
-    const storedShortcuts = localStorage.getItem('shortcuts')
-    const { data } = shortcutsObj.safeParse(storedShortcuts)
+    let data: Shortcuts | null = null
+
+    try {
+      const storedShortcuts = JSON.parse(
+        localStorage.getItem('shortcuts') ?? ''
+      )
+      const result = shortcutsObj.parse(storedShortcuts)
+      data = result ?? null
+    } catch {
+      // Do nothing
+    }
     setShortcuts(data ?? defaultShortcuts)
 
     if (!data) {
@@ -54,6 +73,7 @@ export function ShortcutsProvider({
   }, [])
 
   useEffect(() => {
+    if (!shortcuts) return
     localStorage.setItem('shortcuts', JSON.stringify(shortcuts))
   }, [shortcuts])
 
