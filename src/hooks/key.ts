@@ -1,12 +1,9 @@
 import { use, useEffect, useRef } from 'react'
-import { getNoteFrequency, type Notes, type SharpNotes } from '../lib/notes'
+import { getNoteFrequency, type AllNotes } from '../lib/notes'
 import { SettingsContext } from '../contexts/settings'
 import { useAudioContext } from '../contexts/audioContext'
 
-export function useKeyNote(
-  note: keyof typeof Notes | keyof typeof SharpNotes,
-  octave: number
-) {
+export function useKeyNote(note: AllNotes, octave: number) {
   const audioContext = useAudioContext()
   const sourceNode = useRef<AudioBufferSourceNode | null>(null)
   const gainNode = useRef<GainNode | null>(null)

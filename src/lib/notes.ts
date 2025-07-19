@@ -16,10 +16,9 @@ export const SharpNotes = {
   'LA#': 10,
 }
 
-export function getNoteFrequency(
-  note: keyof typeof Notes | keyof typeof SharpNotes,
-  octave: number
-) {
+export type AllNotes = keyof typeof Notes | keyof typeof SharpNotes
+
+export function getNoteFrequency(note: AllNotes, octave: number) {
   const baseFrequency = 55 // la octave 1
   const relativeOctave = octave - 1
 

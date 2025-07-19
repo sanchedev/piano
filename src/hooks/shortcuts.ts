@@ -1,17 +1,17 @@
 import { use, useEffect, useState } from 'react'
-import type { Notes, SharpNotes } from '../lib/notes'
-import { shortcuts } from '../lib/shortcuts'
+import type { AllNotes } from '../lib/notes'
 import { SettingsContext } from '../contexts/settings'
+import { useShortcutsContext } from '../contexts/shortcuts'
 
 export function useShortcuts(
-  note: keyof typeof Notes | keyof typeof SharpNotes,
+  note: AllNotes,
   octave: number,
   play: () => void,
   stop: () => void
 ) {
-  const key = shortcuts.find(
-    (shortcut) => shortcut.note === note && shortcut.octave === octave
-  )?.key
+  const { shortcuts } = useShortcutsContext()
+
+  const key = shortcuts[note][octave]
 
   const [active, setActive] = useState(false)
 
